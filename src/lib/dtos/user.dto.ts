@@ -15,3 +15,10 @@ export const FindUserDTO = z.object({
 });
 
 export type TFindUserDTO = z.infer<typeof FindUserDTO>;
+
+export const LoginUserDTO = z.object({
+  email: z.email(),
+  password: z.string().min(1, "Password must be informed"),
+});
+
+export type TLoginUserDTO = z.infer<typeof LoginUserDTO>;

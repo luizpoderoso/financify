@@ -1,19 +1,20 @@
 import { db } from "@/lib/db";
 import { usersTable } from "@/lib/db/schema";
-import { eq, or } from "drizzle-orm";
-import { TCreateUserDTO, TFindUserDTO } from "../dtos/user.dto";
+import { eq } from "drizzle-orm";
+import { TCreateUserDTO } from "../dtos/user.dto";
 import bcrypt from "bcryptjs";
 
 /**
  * Busca um usuário pelo email OU pelo nome de usuário.
- * @param dto - Um objeto contendo os dados do usuário a ser buscado.
+ * @param username - Nome de usuário do usuário a ser buscado.
  * @returns O usuário encontrado ou `undefined`.
  */
-export async function getUserByEmailOrUsername(dto: TFindUserDTO) {
-  const { email, username } = dto;
-  const user = await db.query.usersTable.findFirst({
-    where: or(eq(usersTable.email, email), eq(usersTable.username, username)),
-  });
+export async function getUserByUsername(username: string) {
+  const [user] = await db
+    .select()
+    .from(usersTable)
+    .limit(1)
+    .where(eq(usersTable.username, username));
   return user;
 }
 
