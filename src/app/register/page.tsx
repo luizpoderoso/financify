@@ -1,3 +1,7 @@
+"use client";
+
+import { useFormStatus } from "react-dom";
+import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,10 +13,28 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { signUp } from "@/lib/actions/auth";
+
+const initialState = {
+  error: null,
+  success: null,
+};
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" className="w-full" disabled={pending}>
+      {pending ? "Creating account..." : "Create Account"}
+    </Button>
+  );
+}
 
 export default function Register() {
+  const [state, formAction] = useActionState(signUp, initialState);
+
   return (
-    <div className="flex justify-center py-20">
+    <form action={formAction} className="flex justify-center py-20">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Create an account</CardTitle>
@@ -21,52 +43,59 @@ export default function Register() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="username">Email</Label>
-                <Input
-                  id="username"
-                  type="email"
-                  placeholder="seu@email.com"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="username">Username</Label>
-                <Input
-                  id="username"
-                  type="text"
-                  placeholder="your_username"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  {/*<a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>*/}
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="**********"
-                  required
-                />
-              </div>
+          <div className="flex flex-col gap-6">
+            <div className="grid gap-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Your Name"
+                required
+              />
             </div>
-          </form>
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="seu@email.com"
+                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                name="username"
+                type="text"
+                placeholder="your_username"
+                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="**********"
+                required
+              />
+            </div>
+          </div>
         </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full">
-            Sign Up
-          </Button>
+        <CardFooter className="flex-col gap-4">
+          <SubmitButton />
+          <div className="h-4 text-sm font-medium">
+            {state?.error && <p className="text-red-500">{state.error}</p>}
+            {state?.success && (
+              <p className="text-green-500">{state.success}</p>
+            )}
+          </div>
         </CardFooter>
       </Card>
-    </div>
+    </form>
   );
 }
