@@ -56,9 +56,9 @@ cd financify
     ```
 
 **3.  Set up environment variables:**
-    Create a `.env.local` file in the root of the project and add the necessary environment variables (e.g., database URL, NextAuth secret).
+    Create a `.env` file in the root of the project and add the necessary environment variables (e.g., database URL, NextAuth secret).
     ```bash
-    # .env.local
+    # .env
     DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
     NEXTAUTH_SECRET="YOUR_SECRET_HERE"
     NEXTAUTH_URL="http://localhost:3000"
