@@ -1,4 +1,4 @@
-export function Import() {
+export default function Import() {
   return (
     <div>
       <h1>Página de importação</h1>
