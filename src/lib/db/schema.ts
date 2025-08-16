@@ -8,15 +8,20 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import type { AdapterAccount } from "next-auth/adapters";
+import { createId } from "@paralleldrive/cuid2";
 
 export const usersTable = pgTable("user", {
-  id: text("id").notNull().primaryKey(),
+  id: text("id")
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => createId()),
   name: text("name"),
   email: text("email").notNull().unique(),
-  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  emailVerified: timestamp("email_verified", { mode: "date" }),
   image: text("image"),
   username: varchar("username", { length: 255 }).unique(),
-  hashedPassword: text("hashed_password"),
+  hashedPassword: text("hashed_password").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const usersRelations = relations(usersTable, ({ many }) => ({
@@ -28,12 +33,12 @@ export const usersRelations = relations(usersTable, ({ many }) => ({
 export const accountsTable = pgTable(
   "account",
   {
-    userId: text("userId")
+    userId: text("user_id")
       .notNull()
       .references(() => usersTable.id, { onDelete: "cascade" }),
     type: text("type").$type<AdapterAccount["type"]>().notNull(),
     provider: text("provider").notNull(),
-    providerAccountId: text("providerAccountId").notNull(),
+    providerAccountId: text("provider_account_id").notNull(),
     refresh_token: text("refresh_token"),
     access_token: text("access_token"),
     expires_at: integer("expires_at"),
@@ -57,8 +62,8 @@ export const accountsRelations = relations(accountsTable, ({ one }) => ({
 }));
 
 export const sessionsTable = pgTable("session", {
-  sessionToken: text("sessionToken").notNull().primaryKey(),
-  userId: text("userId")
+  sessionToken: text("session_token").notNull().primaryKey(),
+  userId: text("user_id")
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
@@ -72,7 +77,7 @@ export const sessionsRelations = relations(sessionsTable, ({ one }) => ({
 }));
 
 export const verificationTokensTable = pgTable(
-  "verificationToken",
+  "verification_token",
   {
     identifier: text("identifier").notNull(),
     token: text("token").notNull(),
