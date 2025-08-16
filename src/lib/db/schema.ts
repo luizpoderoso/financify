@@ -1,40 +1,105 @@
-import { relations } from "drizzle-orm";
 import {
-  integer,
-  pgTable,
-  serial,
-  text,
   timestamp,
+  pgTable,
+  text,
+  primaryKey,
+  integer,
   varchar,
 } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
+import type { AdapterAccount } from "next-auth/adapters";
 
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
-  username: varchar("username", { length: 255 }).unique().notNull(),
-  email: text("email").unique().notNull(),
-  // hashedPassword: text("hashed_password").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+export const usersTable = pgTable("user", {
+  id: text("id").notNull().primaryKey(),
+  name: text("name"),
+  email: text("email").notNull().unique(),
+  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  image: text("image"),
+  username: varchar("username", { length: 255 }).unique(),
+  hashedPassword: text("hashed_password"),
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
-  transactions: many(transactions),
+export const usersRelations = relations(usersTable, ({ many }) => ({
+  accounts: many(accountsTable),
+  sessions: many(sessionsTable),
+  transactions: many(transactionsTable),
 }));
 
-export const transactions = pgTable("transactions", {
-  id: serial("id").primaryKey(),
+export const accountsTable = pgTable(
+  "account",
+  {
+    userId: text("userId")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    type: text("type").$type<AdapterAccount["type"]>().notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("providerAccountId").notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
+  },
+  (account) => ({
+    compoundKey: primaryKey({
+      columns: [account.provider, account.providerAccountId],
+    }),
+  }),
+);
+
+export const accountsRelations = relations(accountsTable, ({ one }) => ({
+  user: one(usersTable, {
+    fields: [accountsTable.userId],
+    references: [usersTable.id],
+  }),
+}));
+
+export const sessionsTable = pgTable("session", {
+  sessionToken: text("sessionToken").notNull().primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => usersTable.id, { onDelete: "cascade" }),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+});
+
+export const sessionsRelations = relations(sessionsTable, ({ one }) => ({
+  user: one(usersTable, {
+    fields: [sessionsTable.userId],
+    references: [usersTable.id],
+  }),
+}));
+
+export const verificationTokensTable = pgTable(
+  "verificationToken",
+  {
+    identifier: text("identifier").notNull(),
+    token: text("token").notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (vt) => ({
+    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+  }),
+);
+
+export const transactionsTable = pgTable("transactions", {
+  id: integer("id").primaryKey(),
   category: varchar("category", { length: 50 }).notNull(),
   description: text("description").default("").notNull(),
   amountInCents: integer("amount_in_cents").notNull(),
-
-  userId: integer("user_id")
-    .references(() => users.id)
-    .notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => usersTable.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const transactionsRelations = relations(transactions, ({ one }) => ({
-  users: one(users, {
-    fields: [transactions.userId],
-    references: [users.id],
+export const transactionsRelations = relations(
+  transactionsTable,
+  ({ one }) => ({
+    user: one(usersTable, {
+      fields: [transactionsTable.userId],
+      references: [usersTable.id],
+    }),
   }),
-}));
+);
