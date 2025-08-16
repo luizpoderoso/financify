@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Link from "next/link";
 
 export default function Login() {
   return (
@@ -56,9 +57,11 @@ export default function Login() {
           <Button type="submit" className="w-full">
             Login
           </Button>
-          <Button variant="outline" className="w-full">
-            Sign Up
-          </Button>
+          <Link href="/register" className="w-full">
+            <Button variant="outline" className="w-full">
+              Sign Up
+            </Button>
+          </Link>
         </CardFooter>
       </Card>
     </div>
