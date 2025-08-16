@@ -87,7 +87,10 @@ export const verificationTokensTable = pgTable(
 );
 
 export const transactionsTable = pgTable("transactions", {
-  id: integer("id").primaryKey(),
+  id: text("id")
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => createId()),
   category: varchar("category", { length: 50 }).notNull(),
   description: text("description").default("").notNull(),
   amountInCents: integer("amount_in_cents").notNull(),
