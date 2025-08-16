@@ -35,5 +35,9 @@ export async function createUser(dto: TCreateUserDTO) {
     })
     .returning();
 
+  console.log(`\nNew user created with success:
+  ID: ${newUser[0].id}
+  Name: ${newUser[0].name}\n`);
+
   return newUser[0];
 }
