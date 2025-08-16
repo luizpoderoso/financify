@@ -2,12 +2,10 @@
 import { z } from "zod";
 
 export const CreateUserDTO = z.object({
-  name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres."),
-  username: z
-    .string()
-    .min(4, "O nome de usuário deve ter pelo menos 4 caracteres."),
-  email: z.email("Formato de email inválido."),
-  password: z.string().min(8, "A senha deve ter pelo menos 8 caracteres."),
+  name: z.string().min(3, "Name must be at least 3 characters long."),
+  username: z.string().min(4, "Username must be at least 4 characters long."),
+  email: z.email("Invalid email format."),
+  password: z.string().min(8, "Password must be at least 8 characters long."),
 });
 
 export type TCreateUserDTO = z.infer<typeof CreateUserDTO>;
