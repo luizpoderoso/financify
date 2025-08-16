@@ -5,6 +5,7 @@ import {
   primaryKey,
   integer,
   varchar,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import type { AdapterAccount } from "next-auth/adapters";
@@ -86,6 +87,8 @@ export const verificationTokensTable = pgTable(
   }),
 );
 
+const transactionTypes = pgEnum("transaction_type", ["income", "expense"]);
+
 export const transactionsTable = pgTable("transactions", {
   id: text("id")
     .notNull()
@@ -94,6 +97,7 @@ export const transactionsTable = pgTable("transactions", {
   category: varchar("category", { length: 50 }).notNull(),
   description: text("description").default("").notNull(),
   amountInCents: integer("amount_in_cents").notNull(),
+  type: transactionTypes("type").notNull().default("income"),
   userId: text("user_id")
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
