@@ -6,8 +6,7 @@ import bcrypt from "bcryptjs";
 
 /**
  * Busca um usuário pelo email OU pelo nome de usuário.
- * @param email - O email do usuário.
- * @param username - O nome de usuário.
+ * @param dto - Um objeto contendo os dados do usuário a ser buscado.
  * @returns O usuário encontrado ou `undefined`.
  */
 export async function getUserByEmailOrUsername(dto: TFindUserDTO) {
@@ -20,7 +19,7 @@ export async function getUserByEmailOrUsername(dto: TFindUserDTO) {
 
 /**
  * Cria um novo usuário no banco de dados.
- * @param user - Um objeto contendo os dados do novo usuário.
+ * @param dto - Um objeto contendo os dados do novo usuário.
  * @returns O novo usuário criado.
  */
 export async function createUser(dto: TCreateUserDTO) {
