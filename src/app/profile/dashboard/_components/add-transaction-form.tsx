@@ -1,25 +1,26 @@
 "use client";
 
+import { useFormStatus } from "react-dom";
+import { createTransactionAction } from "@/lib/actions/transaction";
 import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { createTransactionAction } from "@/lib/actions/transaction";
 import { Label } from "@/components/ui/label";
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
-import { useActionState } from "react";
-import { useFormStatus } from "react-dom";
+import { useActionState, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const initialState = {
   error: null,
@@ -28,10 +29,9 @@ const initialState = {
 
 function SubmitButton() {
   const { pending } = useFormStatus();
-
   return (
     <Button type="submit" variant="outline" disabled={pending}>
-      {pending ? "Processing Transaction..." : "Add Transaction"}
+      {pending ? "Adding..." : "Add Transaction"}
     </Button>
   );
 }
@@ -41,9 +41,20 @@ export default function AddTransactionForm() {
     createTransactionAction,
     initialState,
   );
+  const [formKey, setFormKey] = useState(() => Math.random().toString());
+
+  useEffect(() => {
+    if (state.success) {
+      setFormKey(Math.random().toString());
+      toast.success("Transação adicionada com sucesso!");
+    }
+    if (state.error) {
+      toast.error(state.error);
+    }
+  }, [state]);
 
   return (
-    <form action={formAction}>
+    <form action={formAction} key={formKey}>
       <Card>
         <CardHeader>
           <CardTitle className="text-xl">Add new transaction</CardTitle>
@@ -52,16 +63,15 @@ export default function AddTransactionForm() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="flex flex-col sm:flex-row [&>*]:w-full [&>div>label]:ml-1 gap-3">
+          <div className="flex flex-col md:flex-row [&>*]:w-full [&>div>label]:ml-1 gap-3">
             <div>
               <Label htmlFor="category">Category</Label>
               <Input
                 id="category"
                 name="category"
-                type="text"
-                placeholder="Type category..."
-                maxLength={50}
                 required
+                defaultValue=""
+                placeholder="Wage, Food"
               />
             </div>
             <div>
@@ -82,10 +92,10 @@ export default function AddTransactionForm() {
                 id="amount"
                 name="amount"
                 type="number"
-                min={0}
-                step={0.01}
-                placeholder="Enter amount..."
+                step="0.01"
                 required
+                defaultValue=""
+                placeholder="50.00"
               />
             </div>
           </div>
@@ -96,8 +106,9 @@ export default function AddTransactionForm() {
             <Input
               id="description"
               name="description"
-              placeholder="Type description..."
-            ></Input>
+              defaultValue=""
+              placeholder="Wage from corporation"
+            />
           </div>
           <div className="h-4 text-sm font-medium">
             {state?.error && <p className="text-red-500">{state.error}</p>}
