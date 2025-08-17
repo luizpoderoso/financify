@@ -1,4 +1,3 @@
-// src/lib/actions/transaction.ts
 "use server";
 
 import { auth } from "@/auth";
@@ -8,7 +7,7 @@ import { revalidatePath } from "next/cache";
 
 type ActionResponse = {
   error: string | null;
-  success: boolean | null;
+  success: string | null;
 };
 
 export async function createTransactionAction(
@@ -20,7 +19,7 @@ export async function createTransactionAction(
   if (!session?.user?.id) {
     return {
       error: "You need to be logged in to create a transaction.",
-      success: false,
+      success: null,
     };
   }
   const userId = session.user.id;
@@ -37,7 +36,7 @@ export async function createTransactionAction(
   if (!validation.success) {
     return {
       error: validation.error.issues.map((e) => e.message).join(", "),
-      success: false,
+      success: null,
     };
   }
 
@@ -50,9 +49,9 @@ export async function createTransactionAction(
     // 4. (A MÁGICA) Revalidar o cache da página do dashboard
     revalidatePath("/profile/dashboard"); // <- Use o caminho correto para sua página
 
-    return { success: true, error: null };
+    return { success: "Transaction created successfully.", error: null };
   } catch (error) {
     console.error("Error creating transaction:", error);
-    return { error: "Could not create transaction.", success: false };
+    return { error: "Could not create transaction.", success: null };
   }
 }

@@ -1,15 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
+import { Transaction } from "./definitions";
 
-type FormattedTransaction = {
-  id: string;
-  userId: string;
-  date: string;
-  description: string;
-  amount: string;
-  category: string;
-};
-
-export const columns: ColumnDef<FormattedTransaction>[] = [
+export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "category",
     header: "Category",
