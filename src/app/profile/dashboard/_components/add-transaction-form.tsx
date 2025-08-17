@@ -1,6 +1,5 @@
 "use client";
 
-import { useFormStatus } from "react-dom";
 import { createTransactionAction } from "@/lib/actions/transaction";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,42 +18,38 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useActionState, useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 
-const initialState = {
-  error: null,
-  success: null,
-};
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" variant="outline" disabled={pending}>
-      {pending ? "Adding..." : "Add Transaction"}
-    </Button>
-  );
-}
-
 export default function AddTransactionForm() {
-  const [state, formAction] = useActionState(
-    createTransactionAction,
-    initialState,
-  );
-  const [formKey, setFormKey] = useState(() => Math.random().toString());
+  const [error, setError] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    if (state.success) {
-      setFormKey(Math.random().toString());
-      toast.success("Transação adicionada com sucesso!");
+  const handleFormSubmit = async (formData: FormData) => {
+    if (submitButtonRef.current) {
+      submitButtonRef.current.disabled = true;
+      submitButtonRef.current.textContent = "Adding...";
     }
-    if (state.error) {
-      toast.error(state.error);
+
+    const result = await createTransactionAction(formData);
+
+    if (submitButtonRef.current) {
+      submitButtonRef.current.disabled = false;
+      submitButtonRef.current.textContent = "Add Transaction";
     }
-  }, [state]);
+
+    if (result.success) {
+      toast.success("Transaction added successfully!");
+      formRef.current?.reset();
+    } else if (result.error) {
+      setError(result.error);
+      toast.error(result.error);
+    }
+  };
 
   return (
-    <form action={formAction} key={formKey}>
+    <form action={handleFormSubmit} ref={formRef}>
       <Card>
         <CardHeader>
           <CardTitle className="text-xl">Add new transaction</CardTitle>
@@ -70,7 +65,6 @@ export default function AddTransactionForm() {
                 id="category"
                 name="category"
                 required
-                defaultValue=""
                 placeholder="Wage, Food"
               />
             </div>
@@ -94,7 +88,6 @@ export default function AddTransactionForm() {
                 type="number"
                 step="0.01"
                 required
-                defaultValue=""
                 placeholder="50.00"
               />
             </div>
@@ -106,17 +99,15 @@ export default function AddTransactionForm() {
             <Input
               id="description"
               name="description"
-              defaultValue=""
               placeholder="Wage from corporation"
             />
           </div>
           <div className="h-4 text-sm font-medium">
-            {state?.error && <p className="text-red-500">{state.error}</p>}
-            {state?.success && (
-              <p className="text-green-500">{state.success}</p>
-            )}
+            {error && <p className="text-red-500">{error}</p>}
           </div>
-          <SubmitButton />
+          <Button type="submit" variant="outline" ref={submitButtonRef}>
+            Add Transaction
+          </Button>
         </CardContent>
       </Card>
     </form>

@@ -5,53 +5,41 @@ import { CreateTransactionDTO } from "../dtos/transaction.dto";
 import { createTransaction } from "../services/transactionService";
 import { revalidatePath } from "next/cache";
 
+// O tipo de retorno agora é mais simples
 type ActionResponse = {
-  error: string | null;
-  success: string | null;
+  error?: string;
+  success?: boolean;
 };
 
+// A action agora recebe apenas o formData
 export async function createTransactionAction(
-  previousState: ActionResponse,
   formData: FormData,
 ): Promise<ActionResponse> {
-  // 1. Verificar se o usuário está autenticado
   const session = await auth();
   if (!session?.user?.id) {
-    return {
-      error: "You need to be logged in to create a transaction.",
-      success: null,
-    };
+    return { error: "You need to be logged in to create a transaction." };
   }
-  const userId = session.user.id;
 
-  // 2. Validar os dados do formulário com nosso novo DTO
   const validation = CreateTransactionDTO.safeParse({
     type: formData.get("type"),
     category: formData.get("category"),
     description: formData.get("description"),
     amount: formData.get("amount"),
-    userId: userId,
+    userId: session.user.id,
   });
 
   if (!validation.success) {
     return {
       error: validation.error.issues.map((e) => e.message).join(", "),
-      success: null,
     };
   }
 
-  // 3. Chamar o service para criar a transação no banco
   try {
-    // Combinamos os dados validados do formulário com o userId da sessão
-    const dto = validation.data;
-    await createTransaction(dto);
-
-    // 4. (A MÁGICA) Revalidar o cache da página do dashboard
-    revalidatePath("/profile/dashboard"); // <- Use o caminho correto para sua página
-
-    return { success: "Transaction created successfully.", error: null };
+    await createTransaction(validation.data);
+    revalidatePath("/profile/dashboard");
+    return { success: true };
   } catch (error) {
     console.error("Error creating transaction:", error);
-    return { error: "Could not create transaction.", success: null };
+    return { error: "Could not create transaction." };
   }
 }
