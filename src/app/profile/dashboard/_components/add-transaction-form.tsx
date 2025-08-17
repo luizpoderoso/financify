@@ -52,7 +52,7 @@ export default function AddTransactionForm() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="flex [&>*]:w-full [&>div>label]:ml-1 gap-3">
+          <div className="flex flex-col sm:flex-row [&>*]:w-full [&>div>label]:ml-1 gap-3">
             <div>
               <Label htmlFor="category">Category</Label>
               <Input

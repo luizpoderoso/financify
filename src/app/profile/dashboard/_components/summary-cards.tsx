@@ -29,7 +29,7 @@ export default async function SummaryCards({
   };
 
   return (
-    <div className="flex gap-10">
+    <div className="flex flex-col sm:flex-row gap-10">
       <Card className="w-full">
         <CardHeader>
           <CardDescription>Total Revenue</CardDescription>

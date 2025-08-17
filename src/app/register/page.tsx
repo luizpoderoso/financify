@@ -34,7 +34,7 @@ export default function Register() {
   const [state, formAction] = useActionState(signUp, initialState);
 
   return (
-    <form action={formAction} className="flex justify-center py-20">
+    <form action={formAction} className="px-3 flex justify-center pt-10 pb-20">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Create an account</CardTitle>
