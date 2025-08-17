@@ -7,7 +7,6 @@ import {
   GetTransactionDTO,
   TCreateTransactionDTO,
 } from "../dtos/transaction.dto";
-import z from "zod";
 
 /**
  * Busca todas as transações de um usuário específico.
@@ -30,7 +29,10 @@ export async function getTransactionsByUserId(userId: string) {
   const validation = GetTransactionDTO.array().safeParse(transformedForDto);
 
   if (!validation.success) {
-    console.error("Erro de validação Zod:", z.treeifyError(validation.error));
+    console.error(
+      "Erro de validação Zod:",
+      validation.error.issues.map((e) => e.message).join(", "),
+    );
     return []; // Retorna um array vazio em caso de falha
   }
 

@@ -4,10 +4,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Transaction } from "../definitions";
+import { FormattedTransaction } from "../definitions";
 
 interface SummaryCardsProps {
-  transactions: Transaction[];
+  transactions: FormattedTransaction[];
 }
 
 export default async function SummaryCards({

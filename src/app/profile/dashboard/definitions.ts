@@ -1,7 +1,6 @@
-export type Transaction = {
-  id: string;
-  type: "income" | "expense";
+export type FormattedTransaction = {
   category: string;
   amount: number;
-  date: string;
+  type: "income" | "expense";
+  createdAt: Date;
 };
