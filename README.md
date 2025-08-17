@@ -46,7 +46,7 @@ To run this project locally, follow these steps:
 
 **1. Clone the repository:**
 ```bash
-git clone [https://github.com/seu-usuario/financify.git](https://github.com/seu-usuario/financify.git)
+git clone [https://github.com/luizpoderoso/financify.git](https://github.com/luizpoderoso/financify.git)
 cd financify
 ```
 
@@ -61,7 +61,6 @@ cd financify
     # .env
     DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
     NEXTAUTH_SECRET="YOUR_SECRET_HERE"
-    NEXTAUTH_URL="http://localhost:3000"
     ```
 
 **4.  Run database migrations:**

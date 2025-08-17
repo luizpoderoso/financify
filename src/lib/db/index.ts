@@ -13,9 +13,6 @@ if (!connectionString) {
   throw new Error("DATABASE_URL is not set in environment variables");
 }
 
-// Em produção, sempre criamos uma nova instância.
-// Em desenvolvimento, reutilizamos a instância salva no `global` para evitar
-// criar múltiplas conexões durante o hot-reload.
 if (process.env.NODE_ENV === "production") {
   const client = new Pool({ connectionString });
   db = drizzle(client, { schema });
