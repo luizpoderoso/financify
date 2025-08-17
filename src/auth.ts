@@ -10,6 +10,26 @@ import { eq } from "drizzle-orm";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db, schema),
   session: { strategy: "jwt" },
+  callbacks: {
+    // O callback `jwt` é chamado sempre que um JWT é criado ou atualizado.
+    // O objeto `user` aqui é o que a função `authorize` retornou.
+    async jwt({ token, user }) {
+      if (user) {
+        // Na primeira vez que o usuário faz login, adicionamos o ID e o username ao token.
+        token.id = user.id;
+      }
+      return token;
+    },
+
+    // O callback `session` é chamado sempre que a sessão é acessada.
+    // Ele usa os dados do `token` (que acabamos de modificar) para construir o objeto da sessão.
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+      }
+      return session;
+    },
+  },
   providers: [
     Credentials({
       async authorize(credentials) {

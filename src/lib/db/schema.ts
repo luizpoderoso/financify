@@ -87,7 +87,10 @@ export const verificationTokensTable = pgTable(
   }),
 );
 
-const transactionTypes = pgEnum("transaction_type", ["income", "expense"]);
+export const transactionTypes = pgEnum("transaction_type", [
+  "income",
+  "expense",
+]);
 
 export const transactionsTable = pgTable("transactions", {
   id: text("id")

@@ -43,6 +43,8 @@ export async function getTransactionsByUserId(userId: string) {
  * @returns A transação criada.
  */
 export async function createTransaction(dto: TCreateTransactionDTO) {
+  console.log(dto);
+
   const [transaction] = await db
     .insert(transactionsTable)
     .values({
@@ -53,6 +55,11 @@ export async function createTransaction(dto: TCreateTransactionDTO) {
       userId: dto.userId,
     })
     .returning();
+
+  console.log(`\nNew transaction created with success:
+  ID: ${transaction.id}
+  Name: ${transaction.category}
+  User ID: ${transaction.userId}\n`);
 
   return transaction;
 }

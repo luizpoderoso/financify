@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -9,7 +11,6 @@ import { columns } from "./columns";
 import { transactions } from "./data";
 import { DataTable } from "./data-table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -18,6 +19,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { createTransactionAction } from "@/lib/actions/transaction";
+import { Input } from "@/components/ui/input";
+
+const initialState = {
+  error: null,
+  success: null,
+};
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" variant="outline" disabled={pending}>
+      {pending ? "Processing Transaction..." : "Add Transaction"}
+    </Button>
+  );
+}
 
 export default function Dashboard() {
   const formattedTransactions = transactions.map((transaction) => {
@@ -26,6 +46,11 @@ export default function Dashboard() {
       amount: `${transaction.amount > 0 ? "" : "- "}R$ ${Math.abs(transaction.amount).toFixed(2)}`,
     };
   });
+
+  const [state, formAction] = useActionState(
+    createTransactionAction,
+    initialState,
+  );
 
   return (
     <div className="flex flex-col items-center pt-10 pb-20 [&>*]:w-full [&>*]:max-w-4xl gap-10">
@@ -44,7 +69,7 @@ export default function Dashboard() {
         </Card>
       </div>
       <DataTable columns={columns} data={formattedTransactions} />
-      <form>
+      <form action={formAction}>
         <Card>
           <CardHeader>
             <CardTitle className="text-xl">Add new transaction</CardTitle>
@@ -67,8 +92,8 @@ export default function Dashboard() {
               </div>
               <div>
                 <Label htmlFor="type">Type</Label>
-                <Select required>
-                  <SelectTrigger id="type" name="type" className="w-full">
+                <Select required name="type">
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Choose type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -90,13 +115,23 @@ export default function Dashboard() {
                 />
               </div>
             </div>
-            <Input
-              id="description"
-              name="description"
-              placeholder="Type description..."
-              required
-            ></Input>
-            <Button variant="outline">Add Transaction</Button>
+            <div>
+              <Label className="ml-1" htmlFor="description">
+                Description
+              </Label>
+              <Input
+                id="description"
+                name="description"
+                placeholder="Type description..."
+              ></Input>
+            </div>
+            <div className="h-4 text-sm font-medium">
+              {state?.error && <p className="text-red-500">{state.error}</p>}
+              {state?.success && (
+                <p className="text-green-500">{state.success}</p>
+              )}
+            </div>
+            <SubmitButton />
           </CardContent>
         </Card>
       </form>
