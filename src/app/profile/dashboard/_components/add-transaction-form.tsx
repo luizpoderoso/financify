@@ -22,6 +22,7 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 export default function AddTransactionForm() {
+  const [selectKey, setSelectKey] = useState(+new Date());
   const [error, setError] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
@@ -31,6 +32,8 @@ export default function AddTransactionForm() {
       submitButtonRef.current.disabled = true;
       submitButtonRef.current.textContent = "Adding...";
     }
+
+    setSelectKey(+new Date());
 
     const result = await createTransactionAction(formData);
 
@@ -70,7 +73,7 @@ export default function AddTransactionForm() {
             </div>
             <div>
               <Label htmlFor="type">Type</Label>
-              <Select required name="type">
+              <Select key={selectKey} required name="type">
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Choose type" />
                 </SelectTrigger>
