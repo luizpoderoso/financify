@@ -20,7 +20,7 @@ export default async function Dashboard() {
   }));
 
   return (
-    <div className="px-3 flex flex-col items-center pt-10 pb-20 [&>*]:w-full [&>*]:max-w-4xl gap-10">
+    <div className="px-3 flex flex-col items-center pt-10 pb-15 [&>*]:w-full [&>*]:max-w-4xl gap-10">
       <SummaryCards transactions={formatted} />
       <DataTable columns={columns} data={formatted} />
       <AddTransactionForm />

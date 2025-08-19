@@ -35,7 +35,7 @@ export default function Login() {
   const [state, formAction] = useActionState(logIn, initialState);
 
   return (
-    <form action={formAction} className="px-3 flex justify-center py-20">
+    <form action={formAction} className="px-3 flex justify-center pt-25 py-20">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
