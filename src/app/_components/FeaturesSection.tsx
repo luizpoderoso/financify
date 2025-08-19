@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UploadCloud, BarChart3, ShieldCheck } from "lucide-react";
+import { Zap, BarChart3, ShieldCheck } from "lucide-react";
 
 export const FeaturesSection = () => (
   <section className="w-full py-12 md:py-24 lg:py-32 bg-secondary">
@@ -16,14 +16,15 @@ export const FeaturesSection = () => (
         <Card className="bg-background">
           <CardHeader>
             <div className="flex items-center gap-4">
-              <UploadCloud className="w-8 h-8 text-primary" />
-              <CardTitle>Easy CSV Import</CardTitle>
+              <Zap className="w-8 h-8 text-primary" />
+              <CardTitle>Lightning-Fast Entry</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              Securely upload your bank statements in CSV format and see your
-              transactions appear in seconds.
+              {
+                "Don't miss a beat. Quickly add new transactions and keep your finances always up-to-date. It's effortless."
+              }
             </p>
           </CardContent>
         </Card>
