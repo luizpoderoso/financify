@@ -1,5 +1,4 @@
-import { columns } from "./columns";
-import { DataTable } from "./_components/data-table";
+import Table from "./_components/table";
 import AddTransactionForm from "./_components/add-transaction-form";
 import SummaryCards from "./_components/summary-cards";
 import { FormattedTransaction } from "./definitions";
@@ -22,7 +21,7 @@ export default async function Dashboard() {
   return (
     <div className="px-3 flex flex-col items-center py-10 [&>*]:w-full [&>*]:max-w-4xl gap-10">
       <SummaryCards transactions={formatted} />
-      <DataTable columns={columns} data={formatted} />
+      <Table transactions={formatted} />
       <AddTransactionForm />
     </div>
   );

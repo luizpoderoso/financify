@@ -4,3 +4,9 @@ export type FormattedTransaction = {
   type: "income" | "expense";
   createdAt: Date;
 };
+
+export type MonthYearTransaction = {
+  month: number;
+  year: number;
+  transactions: FormattedTransaction[];
+};
