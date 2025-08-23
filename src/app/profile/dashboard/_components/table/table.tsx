@@ -5,6 +5,7 @@ import { FormattedTransaction, MonthYearTransaction } from "../../definitions";
 import { DataTable } from "./data-table";
 import { columns } from "../../columns";
 import DateSelect from "./date-select";
+import TransactionDialog from "../transaction-dialog";
 
 export default function Table({
   transactions,
@@ -12,21 +13,36 @@ export default function Table({
   transactions: FormattedTransaction[];
 }) {
   const dateFormatted = formatTransactions(transactions);
-  const [selectedMonth, setSelectedMonth] = useState<FormattedTransaction[]>(
+  const [selectedDate, setSelectedDate] = useState<FormattedTransaction[]>(
     dateFormatted[0].transactions,
   );
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<FormattedTransaction | null>(null);
+
+  const openDialog = (tx: FormattedTransaction) => {
+    setSelectedTransaction(tx);
+    setIsDialogOpen(true);
+  };
 
   return (
     <div className="flex flex-col gap-5">
       <DateSelect
-        setSelectedMonth={setSelectedMonth}
+        setSelectedDate={setSelectedDate}
         dateFormatted={dateFormatted}
       />
       <DataTable
         columns={columns}
-        data={selectedMonth}
-        onRowClick={(row: FormattedTransaction) => console.log(row)}
+        data={selectedDate}
+        onRowClick={(tx: FormattedTransaction) => openDialog(tx)}
       />
+      {isDialogOpen && selectedTransaction ? (
+        <TransactionDialog
+          transaction={selectedTransaction}
+          onClose={() => setIsDialogOpen(false)}
+        />
+      ) : null}
     </div>
   );
 }

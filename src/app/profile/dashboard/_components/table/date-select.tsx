@@ -9,17 +9,17 @@ import { FormattedTransaction, MonthYearTransaction } from "../../definitions";
 
 export default function DateSelect({
   dateFormatted,
-  setSelectedMonth,
+  setSelectedDate,
 }: {
   dateFormatted: MonthYearTransaction[];
-  setSelectedMonth: (transactions: FormattedTransaction[]) => void;
+  setSelectedDate: (transactions: FormattedTransaction[]) => void;
 }) {
   return (
     <Select
       defaultValue={`${dateFormatted[0].month}-${dateFormatted[0].year}`}
       onValueChange={(value) => {
         const [month, year] = value.split("-");
-        setSelectedMonth(
+        setSelectedDate(
           dateFormatted.find(
             (date) =>
               date.month === parseInt(month) && date.year === parseInt(year),
