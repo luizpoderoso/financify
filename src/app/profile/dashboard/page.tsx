@@ -2,13 +2,9 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { getTransactionsByUserId } from "@/lib/services/transactionService"; // Supondo o nome
 import AddTransactionForm from "./_components/add-transaction-form";
-import SummaryCards from "./_components/summary-cards";
-import Table from "./_components/table/table";
 import { FormattedTransaction } from "./definitions";
-import {
-  createTransactionAction,
-  deleteTransactionAction,
-} from "@/lib/actions/transaction";
+import { createTransactionAction } from "@/lib/actions/transaction";
+import ViewArea from "./_components/view-area";
 
 export default async function Dashboard() {
   const session = await auth();
@@ -27,8 +23,7 @@ export default async function Dashboard() {
 
   return (
     <div className="px-3 flex flex-col items-center py-10 [&>*]:w-full [&>*]:max-w-4xl gap-10">
-      <SummaryCards transactions={formatted} />
-      <Table transactions={formatted} deleteAction={deleteTransactionAction} />
+      <ViewArea data={formatted} />
       <AddTransactionForm createAction={createTransactionAction} />
     </div>
   );

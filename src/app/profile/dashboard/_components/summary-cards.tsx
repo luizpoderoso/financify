@@ -10,9 +10,7 @@ interface SummaryCardsProps {
   transactions: FormattedTransaction[];
 }
 
-export default async function SummaryCards({
-  transactions,
-}: SummaryCardsProps) {
+export default function SummaryCards({ transactions }: SummaryCardsProps) {
   const totalRevenue = transactions
     .filter((t) => t.type === "income")
     .reduce((sum, t) => sum + t.amount, 0);
