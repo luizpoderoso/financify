@@ -40,7 +40,8 @@ export default function Table({
       {isDialogOpen && selectedTransaction ? (
         <TransactionDialog
           transaction={selectedTransaction}
-          onClose={() => setIsDialogOpen(false)}
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
         />
       ) : null}
     </div>
