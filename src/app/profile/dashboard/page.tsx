@@ -1,4 +1,4 @@
-import Table from "./_components/table";
+import Table from "./_components/table/table";
 import AddTransactionForm from "./_components/add-transaction-form";
 import SummaryCards from "./_components/summary-cards";
 import { FormattedTransaction } from "./definitions";
@@ -13,6 +13,7 @@ export default async function Dashboard() {
 
   const formatted: FormattedTransaction[] = transactions.map((t) => ({
     category: t.category,
+    description: t.description,
     amount: t.amount,
     type: t.type,
     createdAt: t.createdAt,
