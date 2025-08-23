@@ -1,5 +1,6 @@
 import {
   Card,
+  CardAction,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -26,21 +27,27 @@ export default function SummaryCards({ transactions }: SummaryCardsProps) {
     });
   };
 
+  const totalProfit = totalRevenue - totalExpense;
+
   return (
     <div className="flex flex-col sm:flex-row gap-10">
       <Card className="w-full">
         <CardHeader>
-          <CardDescription>Total Revenue</CardDescription>
-          <CardTitle className="text-3xl text-green-400 hover:text-green-500 transition">
-            {formatCurrency(totalRevenue)}
-          </CardTitle>
-        </CardHeader>
-      </Card>
-      <Card className="w-full">
-        <CardHeader>
-          <CardDescription>Total Expense</CardDescription>
-          <CardTitle className="text-3xl text-red-400 hover:text-red-500 transition">
-            {formatCurrency(totalExpense)}
+          <CardAction className="text-xs sm:text-sm text-right">
+            <p className="text-green-400">
+              <span className="hidden sm:inline">Revenue:</span>{" "}
+              {formatCurrency(totalRevenue)}
+            </p>
+            <p className="text-red-400">
+              <span className="hidden sm:inline">Expense:</span>{" "}
+              {formatCurrency(totalExpense)}
+            </p>
+          </CardAction>
+          <CardDescription>Total Profit</CardDescription>
+          <CardTitle
+            className={`text-3xl ${totalProfit >= 0 ? "text-green-400 hover:text-green-500" : "text-red-400 hover:text-red-500"}  transition`}
+          >
+            {formatCurrency(totalProfit)}
           </CardTitle>
         </CardHeader>
       </Card>
