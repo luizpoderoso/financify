@@ -63,3 +63,25 @@ export async function createTransaction(dto: TCreateTransactionDTO) {
 
   return transaction;
 }
+
+/**
+ * Deleta uma transação pelo ID.
+ * @param txId - ID da transação a ser deletada.
+ * @returns A transação deletada ou undefined se não encontrada.
+ */
+export async function deleteTransaction(txId: string) {
+  const [transaction] = await db
+    .delete(transactionsTable)
+    .where(eq(transactionsTable.id, txId))
+    .returning();
+
+  if (transaction) {
+    console.log(`\nTransaction deleted with success:
+  ID: ${transaction.id}
+  Name: ${transaction.category}
+  User ID: ${transaction.userId}\n`);
+    return transaction;
+  }
+
+  return undefined;
+}

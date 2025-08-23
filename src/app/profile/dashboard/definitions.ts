@@ -1,4 +1,5 @@
 export type FormattedTransaction = {
+  id: string;
   category: string;
   description: string;
   amount: number;

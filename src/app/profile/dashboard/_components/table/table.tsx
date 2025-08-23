@@ -6,12 +6,14 @@ import { DataTable } from "./data-table";
 import { columns } from "../../columns";
 import DateSelect from "./date-select";
 import TransactionDialog from "../transaction-dialog";
+import { ActionResult } from "next/dist/server/app-render/types";
 
-export default function Table({
-  transactions,
-}: {
+interface TableProps {
   transactions: FormattedTransaction[];
-}) {
+  deleteAction: (txId: string) => Promise<ActionResult>;
+}
+
+export default function Table({ transactions, deleteAction }: TableProps) {
   const dateFormatted = useMemo(
     () => formatTransactions(transactions),
     [transactions],
@@ -38,6 +40,14 @@ export default function Table({
     setIsDialogOpen(true);
   };
 
+  const handleDeleteTransaction = async () => {
+    if (!selectedTransaction) return;
+
+    await deleteAction(selectedTransaction.id);
+    setIsDialogOpen(false);
+    setSelectedTransaction(null);
+  };
+
   return (
     <div className="flex flex-col gap-5">
       <DateSelect
@@ -54,6 +64,7 @@ export default function Table({
           transaction={selectedTransaction}
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
+          onDelete={handleDeleteTransaction}
         />
       ) : null}
     </div>

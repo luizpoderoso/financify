@@ -5,7 +5,10 @@ import AddTransactionForm from "./_components/add-transaction-form";
 import SummaryCards from "./_components/summary-cards";
 import Table from "./_components/table/table";
 import { FormattedTransaction } from "./definitions";
-import { createTransactionAction } from "@/lib/actions/transaction";
+import {
+  createTransactionAction,
+  deleteTransactionAction,
+} from "@/lib/actions/transaction";
 
 export default async function Dashboard() {
   const session = await auth();
@@ -14,6 +17,7 @@ export default async function Dashboard() {
   const transactions = await getTransactionsByUserId(session.user.id);
 
   const formatted: FormattedTransaction[] = transactions.map((t) => ({
+    id: t.id,
     category: t.category,
     description: t.description,
     amount: t.amount,
@@ -24,7 +28,7 @@ export default async function Dashboard() {
   return (
     <div className="px-3 flex flex-col items-center py-10 [&>*]:w-full [&>*]:max-w-4xl gap-10">
       <SummaryCards transactions={formatted} />
-      <Table transactions={formatted} />
+      <Table transactions={formatted} deleteAction={deleteTransactionAction} />
       <AddTransactionForm createAction={createTransactionAction} />
     </div>
   );

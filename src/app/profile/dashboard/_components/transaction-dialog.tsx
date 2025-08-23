@@ -1,4 +1,3 @@
-// Imports do shadcn/ui Dialog
 import {
   Dialog,
   DialogContent,
@@ -17,14 +16,14 @@ interface TransactionDialogProps {
   transaction: FormattedTransaction | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  // onDelete: () => void;
+  onDelete: () => void;
 }
 
 export default function TransactionDialog({
   transaction: tx,
   open,
   onOpenChange,
-  // onDelete,
+  onDelete,
 }: TransactionDialogProps) {
   if (!tx) {
     return null;
@@ -60,8 +59,16 @@ export default function TransactionDialog({
         </div>
 
         <DialogFooter className="grid grid-cols-2 gap-2 sm:gap-4">
-          <Button variant="outline">Update</Button>
-          <Button variant="destructive">Delete</Button>
+          <Button variant="outline" disabled>
+            Update
+          </Button>
+          <Button
+            variant="destructive"
+            className="hover:cursor-pointer"
+            onClick={onDelete}
+          >
+            Delete
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
