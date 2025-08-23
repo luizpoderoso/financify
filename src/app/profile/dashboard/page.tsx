@@ -22,7 +22,7 @@ export default async function Dashboard() {
   }));
 
   return (
-    <div className="px-3 flex flex-col items-center py-10 [&>*]:w-full [&>*]:max-w-4xl gap-10">
+    <div className="px-3 flex flex-col items-center pt-8 pb-10 [&>*]:w-full [&>*]:max-w-4xl gap-5 sm:gap-10">
       <ViewArea data={formatted} />
       <AddTransactionForm createAction={createTransactionAction} />
     </div>
