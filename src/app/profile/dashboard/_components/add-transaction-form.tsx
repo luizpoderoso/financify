@@ -1,27 +1,33 @@
 "use client";
 
-import { createTransactionAction } from "@/lib/actions/transaction";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
+  CardContent,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
-  SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectContent,
+  SelectItem,
 } from "@/components/ui/select";
-import { useRef, useState } from "react";
+import { ActionResult } from "next/dist/server/app-render/types";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
 
-export default function AddTransactionForm() {
+interface AddTransactionFormProps {
+  createAction: (formData: FormData) => Promise<ActionResult>;
+}
+
+export default function AddTransactionForm({
+  createAction,
+}: AddTransactionFormProps) {
   const [selectKey, setSelectKey] = useState(+new Date());
   const [error, setError] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
@@ -33,9 +39,7 @@ export default function AddTransactionForm() {
       submitButtonRef.current.textContent = "Adding...";
     }
 
-    setSelectKey(+new Date());
-
-    const result = await createTransactionAction(formData);
+    const result = await createAction(formData);
 
     if (submitButtonRef.current) {
       submitButtonRef.current.disabled = false;
@@ -45,6 +49,7 @@ export default function AddTransactionForm() {
     if (result.success) {
       toast.success("Transaction added successfully!");
       formRef.current?.reset();
+      setSelectKey(+new Date());
     } else if (result.error) {
       setError(result.error);
       toast.error(result.error);

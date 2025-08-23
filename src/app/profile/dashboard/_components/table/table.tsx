@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FormattedTransaction, MonthYearTransaction } from "../../definitions";
 import { DataTable } from "./data-table";
 import { columns } from "../../columns";
@@ -12,10 +12,22 @@ export default function Table({
 }: {
   transactions: FormattedTransaction[];
 }) {
-  const dateFormatted = formatTransactions(transactions);
+  const dateFormatted = useMemo(
+    () => formatTransactions(transactions),
+    [transactions],
+  );
+
   const [selectedDate, setSelectedDate] = useState<FormattedTransaction[]>(
     dateFormatted[0].transactions,
   );
+
+  useEffect(() => {
+    if (dateFormatted.length > 0) {
+      setSelectedDate(dateFormatted[0].transactions);
+    } else {
+      setSelectedDate([]);
+    }
+  }, [dateFormatted]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =

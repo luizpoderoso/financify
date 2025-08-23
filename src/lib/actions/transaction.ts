@@ -4,17 +4,11 @@ import { auth } from "@/auth";
 import { CreateTransactionDTO } from "../dtos/transaction.dto";
 import { createTransaction } from "../services/transactionService";
 import { revalidatePath } from "next/cache";
+import { ActionResult } from "next/dist/server/app-render/types";
 
-// O tipo de retorno agora é mais simples
-type ActionResponse = {
-  error?: string;
-  success?: boolean;
-};
-
-// A action agora recebe apenas o formData
 export async function createTransactionAction(
   formData: FormData,
-): Promise<ActionResponse> {
+): Promise<ActionResult> {
   const session = await auth();
   if (!session?.user?.id) {
     return { error: "You need to be logged in to create a transaction." };
@@ -36,6 +30,7 @@ export async function createTransactionAction(
 
   try {
     await createTransaction(validation.data);
+
     revalidatePath("/profile/dashboard");
     return { success: true };
   } catch (error) {
