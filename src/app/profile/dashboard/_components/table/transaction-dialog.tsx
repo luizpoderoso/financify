@@ -44,7 +44,7 @@ export default function TransactionDialog({
         </DialogHeader>
         <div className="py-4">
           <p
-            className={`font-medium ${
+            className={`font-medium text-center sm:text-left ${
               tx.type === "income" ? "text-emerald-500" : "text-red-500"
             }`}
           >
