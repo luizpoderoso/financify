@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { FormattedTransaction } from "../../definitions";
 import { DataTable } from "./data-table";
-import { columns } from "../../columns";
-import TransactionDialog from "./transaction-dialog";
 import { ActionResult } from "next/dist/server/app-render/types";
+import TransactionDialog from "./transaction-dialog";
+import { columns } from "../../../columns";
+import { FormattedTransaction } from "../../../definitions";
 
 interface TableProps {
   transactions: FormattedTransaction[];

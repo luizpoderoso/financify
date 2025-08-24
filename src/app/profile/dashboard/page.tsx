@@ -4,7 +4,7 @@ import { getTransactionsByUserId } from "@/lib/services/transactionService"; // 
 import AddTransactionForm from "./_components/add-transaction-form";
 import { FormattedTransaction } from "./definitions";
 import { createTransactionAction } from "@/lib/actions/transaction";
-import ViewArea from "./_components/view-area";
+import ViewArea from "./_components/view-area/view-area";
 
 export default async function Dashboard() {
   const session = await auth();

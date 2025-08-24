@@ -7,8 +7,7 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-
-import { FormattedTransaction } from "../../definitions";
+import { FormattedTransaction } from "../../../definitions";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 
